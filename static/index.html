@@ -6,7 +6,7 @@
     <meta content='width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <meta name="license" content="
-        Copyright 2013 Abram Hindle
+        Copyright 2013 Abram Hindle, Michael Xi
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
                 if (xhr.status==200) {
                     //XXX: parse some JSON from the request!
                     //XXX: Pass the data to the callback!
+                    if (callback !== null) {
+                        callback(JSON.parse(xhr.responseText));
+                    }
                 }
             } 
             catch(e) {
@@ -48,8 +51,11 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
         }
     };
     //XXX: POST to a URL
+    xhr.open('POST', url);
     //XXX: set the mimetype and the accept headers!
+    xhr.setRequestHeader("content-type", "application/json")
     // Remember to use application/json !
+    xhr.send(JSON.stringify(objects));
 }
 
 
