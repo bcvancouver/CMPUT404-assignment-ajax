@@ -281,9 +281,10 @@ mouse.mousedraggers.push(function(x,y,clicked,e) {
 
 function update() {
     //XXX: TODO Get the world from the webservice using a XMLHTTPRequest
-    //Reference: https://github.com/kobitoko/CMPUT404-assignment-ajax/blob/master/static/index.html written by Ryan Satyabrata (https://github.com/kobitoko)
+    //Reference: https://github.com/kobitoko/CMPUT404-assignment-ajax/blob/master/static/index.html#L294 written by Ryan Satyabrata (https://github.com/kobitoko)
     sendJSONXMLHTTPRequest('/world', null, function(received){
         if (world !== received){
+            world = received;
             drawNextFrame();
         }
     });
