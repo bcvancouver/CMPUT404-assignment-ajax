@@ -6,7 +6,7 @@
     <meta content='width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <meta name="license" content="
-        Copyright 2013 Abram Hindle, Michael Xi
+        Copyright 2013 Abram Hindle, Michael Xi, Ryan Satyabrata
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
     "/>
     <script src="json2.js"></script>
   </head> 
-  <body bgcolor="black" height="100%" width="100%"> 
-    <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
+  <body height="100%" width="100%">
+    <canvas id="c" width="100%" height="100%" style="background: url('./background.jpg')"></canvas>
     <script>
 var canvas = document.getElementById('c');
 var host = window.location.host;
@@ -35,9 +35,9 @@ var H = canvas.height = window.innerHeight-50;
 function sendJSONXMLHTTPRequest(url, objects, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
-        if (xhr.readyState==4) {
+        if (xhr.readyState===4) {
             try {
-                if (xhr.status==200) {
+                if (xhr.status===200) {
                     //XXX: parse some JSON from the request!
                     //XXX: Pass the data to the callback!
                     if (callback !== null) {
@@ -87,12 +87,25 @@ function prepEntity(entity) {
 }
 
 function clearFrame() {
-    with(context) {
-	moveTo(0,0);
-	fillStyle = "#000";
-	fillRect(0,0,W,H);
+    var dark_image = new Image();
+    dark_image.src = "http://hd-wall-papers.com/images/wallpapers/dark-background-images/dark-background-images-16.jpg";
+    var pattern = context.createPattern(dark_image, "repeat")
+    with (context){
+        context.clearRect(0,0,W,H);
+        context.rect(0,0,W,H)
+        context.fillStyle = pattern;
+        context.fill()
     }
-
+    //with(context) {
+	    //moveTo(0,0);
+        //var pattern = context.createPattern(dark_image, "repeat");
+	    //fillStyle = dark_image;
+        //fillStyle = "#000";
+        //dark_image.onload = function () {
+            //context.drawImage(dark_image,0, 0)
+        //}
+	    //fillRect(0,0,W,H);
+    //}
 }
 
 // This actually draws the frame
@@ -253,21 +266,22 @@ mouse = (function() {
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue'});
-});
-
-mouse.mouseuppers.push(function(x,y,clicked,e) {
     addEntityWithoutName({'x':x,'y':y,'colour':'red'});
 });
 
+mouse.mouseuppers.push(function(x,y,clicked,e) {
+    addEntityWithoutName({'x':x,'y':y,'colour':'yellow'});
+});
+
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
+    addEntityWithoutName({'x':x,'y':y,'colour':'blue',
                           'radius':10});
 });
 
 
 function update() {
     //XXX: TODO Get the world from the webservice using a XMLHTTPRequest
+    //Reference: https://github.com/kobitoko/CMPUT404-assignment-ajax/blob/master/static/index.html written by Ryan Satyabrata (https://github.com/kobitoko)
     sendJSONXMLHTTPRequest('/world', null, function(received){
         if (world !== received){
             drawNextFrame();
@@ -278,9 +292,6 @@ function update() {
 
 // 30 frames per second
 setInterval( update, 1000/30.0);
-
-
-
     </script>
 </body>
 </html>
